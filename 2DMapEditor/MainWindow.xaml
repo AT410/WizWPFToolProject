@@ -1,0 +1,46 @@
+﻿<Window x:Class="_2DMapEditor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:_2DMapEditor"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="20"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+		<Grid Name="Menu" Grid.Row="0">
+			<Menu>
+				<MenuItem Header="ファイル(_F)">
+					<MenuItem Header="新規作成(N)"/>
+					<MenuItem Header="開く(O)" Click="OpenFile_Click"/>
+					<MenuItem Header="保存(S)" Click="SaveFile_Click"/>
+				</MenuItem>
+				<MenuItem Header="書き出し"/>
+			</Menu>
+		</Grid>
+		<Grid Name="Main" Grid.Row="1">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="7*"/>
+				<ColumnDefinition Width="3*"/>
+			</Grid.ColumnDefinitions>
+			<Grid Name="MapView" Grid.Column="0">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="20"/>
+					<RowDefinition Height="*"/>
+				</Grid.RowDefinitions>
+				<Grid Name="MainTab" Grid.Row="0">
+					
+				</Grid>
+				<Grid Name="MainDrawArea" Grid.Row="1">
+					
+				</Grid>
+			</Grid>
+			<Grid Name="SubView" Grid.Column="1">
+				
+			</Grid>
+		</Grid>
+	</Grid>
+</Window>

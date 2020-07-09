@@ -20,7 +20,7 @@
                 </MenuItem>
                 <MenuItem Header="書き出し"/>
                 <MenuItem Header="MapTip作成" Click="CreateMapTip_Click"/>
-                <MenuItem Header="M追加" Click="MenuItem_Click"/>
+                <MenuItem Header="Map作成" Click="CreateMap_Click"/>
             </Menu>
         </Grid>
         <Grid Name="Main" Grid.Row="1">

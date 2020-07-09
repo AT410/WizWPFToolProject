@@ -39,6 +39,13 @@ namespace _2DMapEditor
             _MapList.Add(new MapSet { Id = 3, Name = "大", Row = 36, Column = 36 });
 
             MyComboBox.ItemsSource = _MapList;
+
+            this.Loaded += StartDialog_Loaded;
+        }
+
+        private void StartDialog_Loaded(object sender, RoutedEventArgs e)
+        {
+            MyComboBox.SelectedIndex = 0;
         }
 
         private void CreateButton_Click(object sender, RoutedEventArgs e)
@@ -49,10 +56,16 @@ namespace _2DMapEditor
                 var owner = (MainWindow)Owner;
                 owner.SetRow(item.Row);
                 owner.SetColumn(item.Column);
-                owner.InitEditGrid();
+                owner.InitEditGrid("Map1");
 
+                this.DialogResult = true;
                 this.Close();
             }
+        }
+
+        private void ReadButton_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("CommingSoon!!");
         }
     }
 }

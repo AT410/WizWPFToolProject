@@ -36,9 +36,14 @@ namespace _2DMapEditor
     {
         public uint index;
         public string TipFileName;
+
+        public MapTip()
+        {
+            this.Background = Brushes.Transparent;
+        }
     }
 
-    public class EditMT :Button
+    public class EditMT :Label
     {
         public string TipFileName;
 
@@ -48,10 +53,13 @@ namespace _2DMapEditor
 
         public int index;
 
+        public Brush MipSet;
+
         public EditMT(uint layer)
         {
             
             Layer = layer;
+            MipSet = Brushes.Transparent;
             this.BorderBrush = Brushes.Black;
             this.BorderThickness = new System.Windows.Thickness(1);
             index = -1;
@@ -67,6 +75,19 @@ namespace _2DMapEditor
             this.Background = mapTip.Background;
             this.TipFileName = mapTip.TipFileName;
             this.index = (int)mapTip.index;
+            MipSet = Background;
+        }
+
+        public void SetForcus(bool active)
+        {
+            if(active)
+            {
+                Background = Brushes.LightSkyBlue;
+            }
+            else
+            {
+                Background = MipSet;
+            }
         }
     }
 
@@ -84,5 +105,7 @@ namespace _2DMapEditor
         public void AddLayer() { LayerCount++; }
 
         public void DellLayer() { LayerCount = LayerCount <= 1 ? 1 : LayerCount--; }
+
+        public void SetLayerCount(uint value) { LayerCount = value; }
     }
 }

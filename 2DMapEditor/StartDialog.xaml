@@ -5,13 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_2DMapEditor"
         mc:Ignorable="d"
-        Title="StartDialog" Height="150" Width="360">
-    <Grid>
+        Title="StartDialog" Height="150" Width="360" MaxHeight="150" MaxWidth="360" WindowStyle="ToolWindow" WindowStartupLocation="CenterOwner">
+    <Grid Name="RootGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width = "*"/>
             <ColumnDefinition Width = "*"/>
         </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0" VerticalAlignment="Center">
+        <Grid Name="CreateGrid" Grid.Column="0" VerticalAlignment="Center">
             <StackPanel Orientation="Vertical">
                 <ComboBox x:Name="MyComboBox"
               Height="30"
@@ -24,7 +24,7 @@
                 <Button Content="新規作成" FontSize="20" Width="100" Height="30" Click="CreateButton_Click"></Button>
             </StackPanel>
         </Grid>
-        <Grid Grid.Column="1">
+        <Grid Name="OpenGrid" Grid.Column="1">
             <Button Content="Map読込" FontSize="20" Width="100" Height="30" Click="ReadButton_Click"></Button>
         </Grid>
     </Grid>

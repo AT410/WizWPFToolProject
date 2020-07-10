@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,7 +32,7 @@ namespace _2DMapEditor
     {
         private ObservableCollection<MapSet> _MapList = new ObservableCollection<MapSet>();
 
-        public StartDialog()
+        public StartDialog(bool StartActive)
         {
             InitializeComponent();
 
@@ -41,6 +43,13 @@ namespace _2DMapEditor
             MyComboBox.ItemsSource = _MapList;
 
             this.Loaded += StartDialog_Loaded;
+
+            if (!StartActive)
+            {
+                CreateGrid.SetValue(Grid.ColumnSpanProperty, 2);
+                OpenGrid.Visibility = Visibility.Collapsed;
+                this.Title = "新規作成";
+            }
         }
 
         private void StartDialog_Loaded(object sender, RoutedEventArgs e)
@@ -56,8 +65,9 @@ namespace _2DMapEditor
                 var owner = (MainWindow)Owner;
                 owner.SetRow(item.Row);
                 owner.SetColumn(item.Column);
+                owner.ResetEdit();
                 owner.InitEditGrid("Map1");
-
+                
                 this.DialogResult = true;
                 this.Close();
             }
@@ -65,7 +75,30 @@ namespace _2DMapEditor
 
         private void ReadButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("CommingSoon!!");
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.FileName = "";
+            dialog.DefaultExt = "プロジェクトデータ|*.m2d";
+            dialog.InitialDirectory = Directory.GetCurrentDirectory();
+            if (dialog.ShowDialog() == true)
+            {
+                string FilePath = dialog.FileName;
+
+                var obj = DataIO.BinaryRead(FilePath);
+
+                var setting = obj as EditorSetting;
+                if (setting != null)
+                {
+                    var main = this.Owner as MainWindow;
+                    main.FileName = FilePath;
+                    main.AttachToSetting(setting);
+                    this.DialogResult = true;
+                    this.Close();
+                }
+                else
+                {
+                    MessageBox.Show("非対応のファイルです。");
+                }
+            }
         }
     }
 }

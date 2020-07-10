@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_2DMapEditor"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800" WindowStartupLocation="CenterScreen" WindowState="Maximized">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
@@ -14,11 +14,12 @@
         <Grid Name="Menu" Grid.Row="0">
             <Menu>
                 <MenuItem Header="ファイル(_F)">
-                    <MenuItem Header="新規作成(N)"/>
+                    <MenuItem Header="新規作成(N)" Click="NewCreate_Click"/>
                     <MenuItem Header="開く(O)" Click="OpenFile_Click"/>
                     <MenuItem Header="保存(S)" Click="SaveFile_Click"/>
+                    <MenuItem Header="名前を付けて保存" Click="SaveFileRename_Click"/>
                 </MenuItem>
-                <MenuItem Header="書き出し"/>
+                <MenuItem Header="書き出し" Click="ExportXML_Click"/>
                 <MenuItem Header="MapTip作成" Click="CreateMapTip_Click"/>
                 <MenuItem Header="Map作成" Click="CreateMap_Click"/>
             </Menu>

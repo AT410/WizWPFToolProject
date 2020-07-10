@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_2DMapEditor"
         mc:Ignorable="d"
-        Title="MapTipEditor" Height="500" Width="400">
+        Title="MapTipEditor" Height="500" Width="400" WindowStyle="ToolWindow" WindowStartupLocation="CenterOwner">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="200"/>

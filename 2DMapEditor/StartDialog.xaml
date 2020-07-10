@@ -25,7 +25,7 @@
             </StackPanel>
         </Grid>
         <Grid Name="OpenGrid" Grid.Column="1">
-            <Button Content="Map読込" FontSize="20" Width="100" Height="30" Click="ReadButton_Click"></Button>
+            <Button Content="開く" FontSize="20" Width="100" Height="30" Click="ReadButton_Click"></Button>
         </Grid>
     </Grid>
 </Window>

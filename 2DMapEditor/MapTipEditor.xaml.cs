@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.IO;
 
 namespace _2DMapEditor
 {
@@ -39,11 +40,28 @@ namespace _2DMapEditor
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Filter = "png files (*.xml)|*.png|All files (*.*)|*.*";
             dialog.Title = "画像ファイルを開く";
-            if(dialog.ShowDialog()==true)
+            dialog.InitialDirectory = System.IO.Directory.GetCurrentDirectory() + "\\media";
+            if (dialog.ShowDialog()==true)
             {
-                ImageBox.Text = dialog.FileName;
+                string picFullPath = dialog.FileName;
+                // -- ファイルがあるか --
+                string picFileName = System.IO.Path.GetFileName(picFullPath);
+                string mediaPath = System.IO.Directory.GetCurrentDirectory() + "\\media\\";
+                string newPath = mediaPath + picFileName;
+                if(!File.Exists(newPath))
+                {
+                    // -- メディアファイルにコピー --
+                    File.Copy(picFullPath, newPath);
+                }
+
+                // -- 絶対パスを相対パスへ --
+                var CurrntUri = new Uri(Directory.GetCurrentDirectory()+"\\");
+                var picUri = new Uri(newPath);
+                var reUri = CurrntUri.MakeRelativeUri(picUri);
+
+                ImageBox.Text = reUri.ToString();
                 TipView.Background = new ImageBrush(
-                        new BitmapImage(new Uri(ImageBox.Text)));
+                        new BitmapImage(new Uri(newPath)));
                 test.TipFileName = ImageBox.Text;
                 
             }

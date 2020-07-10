@@ -78,7 +78,7 @@ namespace _2DMapEditor
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.FileName = "";
             dialog.DefaultExt = "プロジェクトデータ|*.m2d";
-            dialog.InitialDirectory = Directory.GetCurrentDirectory();
+            dialog.InitialDirectory = Directory.GetCurrentDirectory()+"\\Projects";
             if (dialog.ShowDialog() == true)
             {
                 string FilePath = dialog.FileName;

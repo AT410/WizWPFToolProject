@@ -48,6 +48,10 @@ namespace _2DMapEditor
 
         DrawMode mode;
 
+        private bool SizeActive;
+
+        private float buttonsize;
+
         public void SetRow(int Row) { RowCount = Row > 0 ? Row : 1; }
         public void SetColumn(int Col) { ColumnCount = Col > 0 ? Col : 1; }
 
@@ -55,6 +59,11 @@ namespace _2DMapEditor
         {
             InitializeComponent();
             this.Loaded += StartEvent;
+            this.KeyDown += MainWindow_KeyDown;
+            this.KeyUp += MainWindow_KeyUp;
+
+            SizeActive = false;
+            buttonsize = 35;
 
             MapTipGrid.Children.Clear();
             MapTipGrid.Rows = 2;
@@ -96,6 +105,22 @@ namespace _2DMapEditor
             if(!Directory.Exists(MediaFolder))
             {
                 Directory.CreateDirectory(MediaFolder);
+            }
+        }
+
+        private void MainWindow_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.LeftCtrl)
+            {
+                SizeActive = false;
+            }
+        }
+
+        private void MainWindow_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.LeftCtrl)
+            {
+                SizeActive = true;
             }
         }
 
@@ -471,8 +496,8 @@ namespace _2DMapEditor
                 for (int Col = 0; Col < ColumnCount; Col++)
                 {
                     EditMT bt = new EditMT(Layer);
-                    bt.Width = 35;
-                    bt.Height = 35;
+                    bt.Width = buttonsize;
+                    bt.Height = buttonsize;
                     bt.Cell = new CellIndex(row, Col);
                     bt.Background = Brushes.Transparent;
                     bt.BorderBrush = Brushes.Black;
@@ -480,6 +505,7 @@ namespace _2DMapEditor
                     bt.MouseRightButtonDown += DrawErase;
                     bt.MouseEnter += Bt_MouseEnter;
                     bt.MouseLeave += Bt_MouseLeave;
+                    bt.MouseWheel += bt_MouseWheel;
                     grid.Children.Add(bt);
                 }
             }
@@ -601,11 +627,19 @@ namespace _2DMapEditor
 
             }
 
+            bool selected = false;
+
             foreach (var tabset in setting.tabSettings)
             {
                 OriTab tab = new OriTab();
                 tab.Header = tabset.Header;
                 tab.SetLayerCount(tabset.LayerCount);
+
+                if(!selected)
+                {
+                    tab.IsSelected = true;
+                    selected = true;
+                }
 
                 ScrollViewer scrollViewer = new ScrollViewer();
                 scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
@@ -647,13 +681,14 @@ namespace _2DMapEditor
                             edit.Background = Brushes.Transparent;
                         }
 
-                        edit.Width = 35;
-                        edit.Height = 35;
+                        edit.Width = buttonsize;
+                        edit.Height = buttonsize;
                         edit.BorderBrush = Brushes.Black;
                         edit.MouseLeftButtonDown += DrawTip;
                         edit.MouseRightButtonDown += DrawErase;
                         edit.MouseEnter += Bt_MouseEnter;
                         edit.MouseLeave += Bt_MouseLeave;
+                        edit.MouseWheel += bt_MouseWheel;
 
                         uniform.Children.Add(edit);
                     }
@@ -666,6 +701,50 @@ namespace _2DMapEditor
                 tab.Content = scrollViewer;
 
                 LayerTab.Items.Add(tab);
+            }
+        }
+
+        private void bt_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (!SizeActive)
+                return;
+
+            if(e.Delta>0)
+            {
+                //拡大
+                UpdateEditTipSize(+0.5f);
+            }
+            else if(e.Delta<0)
+            {
+                UpdateEditTipSize(-0.5f);
+            }
+        }
+
+        private void UpdateEditTipSize(float size)
+        {
+            var scroll = (ScrollViewer)ActiveTab.Content;
+            var grid = (Grid)scroll.Content;
+
+            foreach (var uniform in grid.Children.OfType<UniformGrid>())
+            {
+                foreach (var Bt in uniform.Children.OfType<EditMT>())
+                {
+                    Bt.Width += size;
+                    Bt.Height += size;
+
+                    if (Bt.Width <10)
+                    {
+                        Bt.Width = 10;
+                        Bt.Height = 10;
+                    }
+                    else if(Bt.Width>50)
+                    {
+                        Bt.Width = 50;
+                        Bt.Height = 50;
+                    }
+
+                    buttonsize = (float)Bt.Width;
+                }
             }
         }
 

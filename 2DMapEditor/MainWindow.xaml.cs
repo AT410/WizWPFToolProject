@@ -622,7 +622,7 @@ namespace _2DMapEditor
                 mt.index = maptip.index;
                 mt.TipFileName = maptip.TipFileName;
                 mt.Background = new ImageBrush(
-                    new BitmapImage(new Uri(maptip.TipFileName)));
+                    new BitmapImage(new Uri(System.IO.Path.GetFullPath(maptip.TipFileName))));
                 MapTipGrid.Children.Add(mt);
 
             }

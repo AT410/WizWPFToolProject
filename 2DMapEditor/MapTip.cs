@@ -60,8 +60,7 @@ namespace _2DMapEditor
             
             Layer = layer;
             MipSet = Brushes.Transparent;
-            this.BorderBrush = Brushes.Black;
-            this.BorderThickness = new System.Windows.Thickness(1);
+            BorderSet(true);
             index = -1;
         }
 
@@ -87,6 +86,20 @@ namespace _2DMapEditor
             else
             {
                 Background = MipSet;
+            }
+        }
+
+        public void BorderSet(bool Active)
+        {
+            if(Active)
+            {
+                this.BorderBrush = Brushes.Black;
+                this.BorderThickness = new System.Windows.Thickness(1);
+            }
+            else
+            {
+                this.BorderBrush = Brushes.Transparent;
+                this.BorderThickness = new System.Windows.Thickness(0);
             }
         }
     }

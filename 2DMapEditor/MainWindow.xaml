@@ -22,6 +22,7 @@
                 <MenuItem Header="書き出し" Click="ExportXML_Click"/>
                 <MenuItem Header="MapTip作成" Click="CreateMapTip_Click"/>
                 <MenuItem Header="Map作成" Click="CreateMap_Click"/>
+                <MenuItem Header="Test" Click="TestImage_Click"/>
             </Menu>
         </Grid>
         <Grid Name="Main" Grid.Row="1">

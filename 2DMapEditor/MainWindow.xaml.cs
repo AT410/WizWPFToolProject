@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Policy;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,6 +18,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using System.Xml.Serialization;
 
 namespace _2DMapEditor
@@ -746,6 +748,64 @@ namespace _2DMapEditor
                     buttonsize = (float)Bt.Width;
                 }
             }
+        }
+
+        private void TestImage_Click(object sender, RoutedEventArgs e)
+        {
+            var scroll = (ScrollViewer)ActiveTab.Content;
+            var grid = (Grid)scroll.Content;
+
+            var uniform = grid.Children[0]as UniformGrid;
+
+            foreach (var uni in grid.Children.OfType<UniformGrid>())
+            {
+                foreach (var tip in uni.Children.OfType<EditMT>())
+                {
+                    tip.BorderSet(false);
+                }
+            }
+
+            DoEvents();
+
+            // レンダリング
+            var bmp = new RenderTargetBitmap(
+                (int)uniform.ActualWidth,
+                (int)uniform.ActualHeight,
+                96, 96, // DPI
+                PixelFormats.Pbgra32);
+
+            bmp.Render(grid);
+
+
+            var path = Directory.GetCurrentDirectory() + "/Media/EX" + ActiveTab.Header.ToString() + ".png";
+
+            // pngで保存
+            var encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(bmp));
+            using (var fs = File.Open(path, FileMode.Create))
+            {
+                encoder.Save(fs);
+            }
+
+            foreach (var uni in grid.Children.OfType<UniformGrid>())
+            {
+                foreach (var tip in uni.Children.OfType<EditMT>())
+                {
+                    tip.BorderSet(true);
+                }
+            }
+        }
+
+        private void DoEvents()
+        {
+            DispatcherFrame frame = new DispatcherFrame();
+            var callback = new DispatcherOperationCallback(obj =>
+            {
+                ((DispatcherFrame)obj).Continue = false;
+                return null;
+            });
+            Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Background, callback, frame);
+            Dispatcher.PushFrame(frame);
         }
 
         private void UpdataTitle()

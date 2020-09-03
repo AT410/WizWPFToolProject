@@ -27,6 +27,7 @@ namespace _2DMapEditor
             InitializeComponent();
             this.Closed += MapTipEditor_Closed;
             test = mapTip;
+            ImageBox.Text = mapTip.TipFileName;
             TipView.Background = test.Background;
         }
 
@@ -55,7 +56,7 @@ namespace _2DMapEditor
                 }
 
                 // -- 絶対パスを相対パスへ --
-                var CurrntUri = new Uri(Directory.GetCurrentDirectory()+"\\");
+                var CurrntUri = new Uri(Directory.GetCurrentDirectory()+"\\media\\");
                 var picUri = new Uri(newPath);
                 var reUri = CurrntUri.MakeRelativeUri(picUri);
 

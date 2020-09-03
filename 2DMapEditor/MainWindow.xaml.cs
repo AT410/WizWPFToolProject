@@ -181,8 +181,8 @@ namespace _2DMapEditor
 
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.FileName = "";
-            dialog.DefaultExt = "プロジェクトデータ (*.m2d)|*.m2d";
-            dialog.InitialDirectory = Directory.GetCurrentDirectory();
+            dialog.Filter = "プロジェクトデータ (*.m3d)|*.m3d";
+            dialog.InitialDirectory = Directory.GetCurrentDirectory()+"\\Projects\\";
             if (dialog.ShowDialog() == true)
             {
                 LayerTab.Items.Clear();
@@ -445,8 +445,8 @@ namespace _2DMapEditor
         {
             SaveFileDialog dialog = new SaveFileDialog();
             dialog.FileName = "MapFile";
-            dialog.Filter = "プロジェクトデータ (*.m2d)|*.m2d|All files (*.*)|*.*";
-            dialog.InitialDirectory = Directory.GetCurrentDirectory()+ "\\Projects";
+            dialog.Filter = "プロジェクトデータ (*.m3d)|*.m3d|All files (*.*)|*.*";
+            dialog.InitialDirectory = Directory.GetCurrentDirectory()+ "\\Projects\\";
             if (dialog.ShowDialog() == true)
             {
                 Dirty = true;
@@ -576,27 +576,23 @@ namespace _2DMapEditor
                         setSize = true;
                     }
 
-                    LayerSetting layerSetting = new LayerSetting();
-
-                    bool setlayer = false;
-
                     foreach (var editcell in uniform.Children.OfType<EditMT>())
                     {
-                        if (!setlayer)
+                        var obj = tabSetting.Cells.Count >0 ?tabSetting.Cells.Where(x => x.X == editcell.Cell.X && x.Y == editcell.Cell.Y).FirstOrDefault():null;
+
+                        if (obj != null)
                         {
-                            layerSetting.Layer = editcell.GetLayer();
-                            setlayer = true;
+                            obj.MapTipIndexs+=","+editcell.index.ToString();
                         }
-
-                        CellSetting cell = new CellSetting();
-                        cell.X = editcell.Cell.X;
-                        cell.Y = editcell.Cell.Y;
-                        cell.MapTipIndex = editcell.index;
-
-                        layerSetting.cellmap.Add(cell);
+                        else
+                        {
+                            CellSetting cell = new CellSetting();
+                            cell.X = editcell.Cell.X;
+                            cell.Y = editcell.Cell.Y;
+                            cell.MapTipIndexs+=editcell.index.ToString();
+                            tabSetting.Cells.Add(cell);
+                        }
                     }
-
-                    tabSetting.Layers.Add(layerSetting);
                 }
 
                 setting.tabSettings.Add(tabSetting);
@@ -614,7 +610,7 @@ namespace _2DMapEditor
         public void AttachToSetting(EditorSetting setting)
         {
             // -- マップチップ読込 --
-            foreach(var maptip in setting.tips)
+            foreach (var maptip in setting.tips)
             {
                 MapTip mt = new MapTip();
                 mt.Width = 35;
@@ -623,8 +619,9 @@ namespace _2DMapEditor
                 mt.Click += Mt_Click;
                 mt.index = maptip.index;
                 mt.TipFileName = maptip.TipFileName;
+                string PicFullPath = "media\\" + maptip.TipFileName;
                 mt.Background = new ImageBrush(
-                    new BitmapImage(new Uri(System.IO.Path.GetFullPath(maptip.TipFileName))));
+                    new BitmapImage(new Uri(System.IO.Path.GetFullPath(PicFullPath))));
                 MapTipGrid.Children.Add(mt);
 
             }
@@ -637,7 +634,7 @@ namespace _2DMapEditor
                 tab.Header = tabset.Header;
                 tab.SetLayerCount(tabset.LayerCount);
 
-                if(!selected)
+                if (!selected)
                 {
                     tab.IsSelected = true;
                     selected = true;
@@ -649,7 +646,7 @@ namespace _2DMapEditor
                 scrollViewer.Background = Brushes.WhiteSmoke;
 
                 Grid grid = new Grid();
-                foreach(var layer in tabset.Layers)
+                for(uint layer = 0;layer<tabset.LayerCount;layer++)
                 {
                     UniformGrid uniform = new UniformGrid();
                     uniform.Rows = tabset.GridRows;
@@ -660,17 +657,18 @@ namespace _2DMapEditor
 
                     uniform.Children.Clear();
 
-                    foreach(var cell in layer.cellmap)
+                    foreach (var cell in tabset.Cells)
                     {
-                        EditMT edit = new EditMT(layer.Layer);
+                        EditMT edit = new EditMT(layer);
                         edit.Cell = new CellIndex(cell.X, cell.Y);
-                        edit.index = cell.MapTipIndex;
+                        var mtindices = Int32.Parse(cell.MapTipIndexs.Split(',')[layer]);
+                        edit.index = mtindices;
                         // -- マップチップを反映させる --
                         if (edit.index != -1)
                         {
-                            foreach(var tip in MapTipGrid.Children.OfType<MapTip>())
+                            foreach (var tip in MapTipGrid.Children.OfType<MapTip>())
                             {
-                                if(tip.index == edit.index)
+                                if (tip.index == edit.index)
                                 {
                                     edit.Background = tip.Background;
                                     edit.MipSet = tip.Background;

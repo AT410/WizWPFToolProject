@@ -67,7 +67,7 @@ namespace _2DMapEditor
                 owner.SetColumn(item.Column);
                 owner.ResetEdit();
                 owner.InitEditGrid("Map1");
-                
+
                 this.DialogResult = true;
                 this.Close();
             }
@@ -77,7 +77,7 @@ namespace _2DMapEditor
         {
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.FileName = "";
-            dialog.DefaultExt = "プロジェクトデータ|*.m2d";
+            dialog.Filter = "プロジェクトデータ|*.m3d";
             dialog.InitialDirectory = Directory.GetCurrentDirectory()+"\\Projects";
             if (dialog.ShowDialog() == true)
             {

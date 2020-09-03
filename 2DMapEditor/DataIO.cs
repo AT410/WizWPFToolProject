@@ -38,23 +38,12 @@ namespace _2DMapEditor
         [XmlAttribute("Y")]
         public int Y;
 
-        [XmlAttribute("Index")]
-        public int MapTipIndex;
-    }
+        [XmlAttribute("LayerIndex")]
+        public string MapTipIndexs;
 
-    // -- LayerSetting --
-    [Serializable]
-    public class LayerSetting
-    {
-        [XmlAttribute("Layer")]
-        public uint Layer;
-
-        [XmlElement("CellMap")]
-        public List<CellSetting> cellmap;
-
-        public LayerSetting()
+        public CellSetting()
         {
-            cellmap = new List<CellSetting>();
+            MapTipIndexs = "";
         }
     }
 
@@ -75,12 +64,12 @@ namespace _2DMapEditor
         [XmlAttribute("Columns")]
         public int GridColumns;
 
-        [XmlElement("Layers")]
-        public List<LayerSetting> Layers;
+        [XmlElement("CellMap")]
+        public List<CellSetting> Cells;
 
         public TabSetting()
         {
-            Layers = new List<LayerSetting>();
+            Cells = new List<CellSetting>();
         }
     }
 
